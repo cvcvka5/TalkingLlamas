@@ -12,6 +12,11 @@ A clean Python framework for simulating two-turn LLM conversations using a consi
 ## Examples
 For examples on how to use each class, check the [examples](examples) directory.
 
+[llamapair.py](mods/llamapair.py) example output:
+![example](https://github.com/user-attachments/assets/b84aa390-3ba3-4042-b3de-ae5cd7892e19)
+
+
+
 ## Installation
 
 If you're interested in the API:
