@@ -15,7 +15,13 @@ For examples on how to use each class, check the [examples](examples) directory.
 [llamapair.py](mods/llamapair.py) example output:
 ![example](https://github.com/user-attachments/assets/b84aa390-3ba3-4042-b3de-ae5cd7892e19)
 
-
+## Prerequisites
+1. Have [Ollama](https://ollama.com) installed locally.
+2. Have "<i>llama3.1:8b-instruct-q4_K_M</i>" or a module of your choice installed.
+3. Run the module from the CLI with:
+```bash
+ollama run "module_name"
+```
 
 ## Installation
 
