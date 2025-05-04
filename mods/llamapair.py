@@ -1,13 +1,15 @@
 from mods.llama import Llama
-
+import threading
+from typing import Callable
 
 class LlamaPair:
-    def __init__(self, llama1: Llama, llama2: Llama):
+    def __init__(self, llama1: Llama, llama2: Llama, onResponse: Callable = lambda msg, res: None):
         """
         Initializes a LlamaPair instance with two Llama objects.
         Args:
             llama1 (Llama): The first Llama object.
             llama2 (Llama): The second Llama object.
+            onResponse (Callable, optional): A callback function to handle responses. Defaults to a no-op lambda function. 
         Attributes:
             llamas (list): A list containing the two Llama objects.
             llama_index (int): An index to track the current Llama, initialized to 0.
@@ -15,6 +17,7 @@ class LlamaPair:
         
         self.llamas = [llama1, llama2]
         self.llama_index = 0
+        self.onResponse = onResponse
         
     
     def send(self, message: str) -> str:
@@ -40,7 +43,31 @@ class LlamaPair:
         response = nextLlama.send(message, role="user", save=True)
         
         return response
+    
+    def sendReactive(self, message: str) -> None:
+        """
+        Sends a message reactively in a separate thread and handles the response.
+        This method spawns a new thread to execute the inner function, which sends
+        a message to the current Llama, retrieves the response, and triggers the
+        `onResponse` callback with the (sender, message) and (receiver, response) arguments.
+        Args:
+            message (str): The message to be sent to the current Llama.
+        Returns:
+            None
+        """
         
+        def inner(message: str) -> None:
+            currentLlama = self.currentLlama
+            nextLlama = self.nextLlama
+            response = self.send(message)
+            self.onResponse((currentLlama, message), (nextLlama, response))
+            
+            return None
+        
+        threading.Thread(target=inner, args=(message,)).start()
+
+    
+    
     def skipTurn(self) -> None:
         """
         Skips the current turn by incrementing the llama index.
